@@ -2,9 +2,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 
+//Adding Controllers
+const apiController = require('.\controllers\apiController.js')
+const htmlController = require('.\controllers\htmlController.js')
+
 let port = process.env.PORT || 3000;
-let urlencodedParser = bodyParser.urlencoded({ extended: false });
-let jsonParser = bodyParser.json();
 
 //Using Middleware
 app.use('/assets', express.static(__dirname + '/public'));
@@ -24,23 +26,9 @@ app.get('/person/:id', function(req, res) {
     res.send(`<html><head></head><body><h1>Person: ${req.params.id}</h1></body></html>`);
 });
 
-//BodyParser Json Usage
-app.post('personjson', jsonParser, function(req,res) {
-    res.send('Thank you for json data');
-    console.log(req.body.firstname);
-});
 
-//object body added to request by 'body-parser'
-app.post('/person', urlencodedParser, function(req, res) {
-    res.send('Thank you!');
-    console.log(req.body.firstname);
-});
+htmlController(app);
 
-app.get('/api', function(req, res) {
-    res.json({ 
-        firstname: 'Grzegorz',
-        lastname: 'Szumilas'
-    });
-});
+apiController(app);
 
 app.listen(port);
